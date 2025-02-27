@@ -1,101 +1,148 @@
-import Image from "next/image";
+'use client';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { userLevels } from '@/models/levels';
+import Conquistas from '@/sections/conquistas/conquistas-view';
+import Dashboard from '@/sections/dashboard/dashboard';
+import DesafiosAnteriores from '@/sections/desafios-anteriores/desafios-anteriores';
+import NovoDesafio from '@/sections/desafios/novo/novo-desafio';
+import PerfilView from '@/sections/perfil/perfil-view';
+import Social from '@/sections/social/social-view';
+import { motion, AnimatePresence } from 'framer-motion';
+import { BarChart2, ListTodo, PlusCircle, Search, Trophy, User, Users } from 'lucide-react';
+import { useState } from 'react';
+import { BarChart } from 'recharts';
+import { Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarProvider } from "@/components/ui/sidebar"
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [activeTab, setActiveTab] = useState("dashboard")
+  const [userLevel, setUserLevel] = useState(1)
+  const [userName, setUserName] = useState("Yasmin Lopes")
+  const [xp, setXp] = useState(750)
+  const [nextLevelXp, setNextLevelXp] = useState(1000)
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+  return (
+    <SidebarProvider>
+      <div className="flex h-screen bg-background">
+        <Sidebar className="w-64 border-r">
+          <SidebarHeader>
+            <h2 className="text-2xl font-bold p-4">Morcegão do Pix</h2>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => setActiveTab("dashboard")}>
+                  <BarChart className="mr-2" />
+                  Dashboard
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => setActiveTab("novo-desafio")}>
+                  <PlusCircle className="mr-2" />
+                  Novo Desafio
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => setActiveTab("desafios-anteriores")}>
+                  <ListTodo className="mr-2" />
+                  Desafios Anteriores
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => setActiveTab("conquistas")}>
+                  <Trophy className="mr-2" />
+                  Conquistas
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => setActiveTab("social")}>
+                  <Users className="mr-2" />
+                  Social
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => setActiveTab("perfil")}>
+                  <User className="mr-2" />
+                  Perfil
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarContent>
+        </Sidebar>
+        <main className="flex-1 flex flex-col overflow-hidden">
+          <header className="bg-secondary p-4 flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Avatar>
+                <AvatarImage src="/placeholder.svg?height=40&width=40" alt={userName} />
+                <AvatarFallback>{userName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+              </Avatar>
+              <div>
+                <h2 className="font-semibold">{userName}</h2>
+                <div className="flex items-center space-x-2">
+                  <Badge variant="outline">{userLevels[userLevel]}</Badge>
+                  <Progress value={(xp / nextLevelXp) * 100} className="w-24" />
+                  <span className="text-xs text-muted-foreground">{xp}/{nextLevelXp} XP</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Input
+                type="search"
+                placeholder="Buscar desafios..."
+                className="w-64"
+              />
+              <Button variant="outline" size="icon">
+                <Search className="h-4 w-4" />
+              </Button>
+            </div>
+          </header>
+          <div className="flex-1 overflow-auto p-6">
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="mb-4">
+                <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+                <TabsTrigger value="novo-desafio">Novo Desafio</TabsTrigger>
+                <TabsTrigger value="desafios-anteriores">Desafios Anteriores</TabsTrigger>
+                <TabsTrigger value="conquistas">Conquistas</TabsTrigger>
+                <TabsTrigger value="social">Social</TabsTrigger>
+                <TabsTrigger value="perfil">Perfil</TabsTrigger>
+              </TabsList>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <TabsContent value="dashboard">
+                    <Dashboard />
+                  </TabsContent>
+                  <TabsContent value="novo-desafio">
+                    <NovoDesafio />
+                  </TabsContent>
+                  <TabsContent value="desafios-anteriores">
+                    <DesafiosAnteriores />
+                  </TabsContent>
+                  <TabsContent value="conquistas">
+                    <Conquistas />
+                  </TabsContent>
+                  <TabsContent value="social">
+                    <Social />
+                  </TabsContent>
+                  <TabsContent value="perfil">
+                    <PerfilView userName={userName} setUserName={setUserName} userLevel={userLevel} setUserLevel={setUserLevel} />
+                  </TabsContent>
+                </motion.div>
+              </AnimatePresence>
+            </Tabs>
+          </div>
+        </main>
+      </div>
+    </SidebarProvider>
+  )
 }
